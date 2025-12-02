@@ -26,12 +26,12 @@ if (Test-Path $ConfigFile) {
 $scriptInfo = @(
     @{
         Script = "test-stack.ps1"
-        Description = "Performs a full health check of all services in the stack."
+        Description = "Performs a full Health check of all services in the stack."
         Flags = "None"
     },
     @{
         Script = "start-stack.ps1"
-        Description = "Starts the stack based on already built images and runs the health check."
+        Description = "Starts the stack based on already built images and runs the Health check."
         Flags = "None"
     },
     @{

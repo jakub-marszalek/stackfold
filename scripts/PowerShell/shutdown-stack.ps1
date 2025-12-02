@@ -3,6 +3,19 @@
 # All Rights Reserved.
 #
 
+param(
+    [switch]$Remove
+)
+
+# ===================================================
+# Shut down whole stack
+#
+# Use flag:
+#     -Remove    - To also remove volumes
+#
+# NOTE: By default none of the volumes will be removed
+# ====================================================
+
 #
 # Configuration / Constants
 #
@@ -19,20 +32,6 @@ if (Test-Path $UiFile) {
     Write-Host "UI helper file not found: $UiFile" -ForegroundColor Red
     exit 1
 }
-
-# Arguments / Flags
-param(
-[switch]$Remove
-)
-
-# ===================================================
-# Shut down whole stack
-#
-# Use flag:
-#     -Remove    - To also remove volumes
-#
-# NOTE: By default none of the volumes will be removed
-# ====================================================
 
 #
 # Shutdown sequence

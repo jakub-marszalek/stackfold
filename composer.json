@@ -1,0 +1,25 @@
+{
+  "name": "vendor_name/stackr",
+  "description": "Stackr is an automation tool designed to streamline the setup,\nbuild, and management of new Laravel projects using Docker.",
+  "type": "project",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Jakub Marszalek",
+      "email": "kuba.marszalek05@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "vlucas/phpdotenv": "^5.0",
+    "ext-pdo": "*",
+    "ext-redis": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/",
+      "Health\\": "docker/Health/"
+    }
+  }
+}
