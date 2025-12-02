@@ -9,7 +9,7 @@ project="StackR - Laravel Docker Automation"
 author="Jakub Marszalek / hesoyamcc"
 environment="Development"
 version="1.0.0"
-description="Stacker is an automation tool designed to streamline the setup,
+description="Stackr is an automation tool designed to streamline the setup,
 build, and management of new Laravel projects using Docker.
 It handles container orchestration, health checks, and environment
 setup, enabling developers to start new projects quickly and consistently."

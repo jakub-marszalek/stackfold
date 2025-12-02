@@ -3,6 +3,19 @@
 # All Rights Reserved.
 #
 
+param(
+    [switch]$BuildAndStart
+)
+
+# ===================================================
+# Build Whole Stack
+#
+# Use flag:
+#     -BuildAndStart - To build images and start them
+#
+# NOTE: By default only build will be executed
+# ===================================================
+
 #
 # Configuration / Constants
 #
@@ -20,20 +33,6 @@ if (Test-Path $UiFile) {
     Write-Host "UI helper file not found: $UiFile" -ForegroundColor Red
     exit 1
 }
-
-# Arguments / Flags
-param(
-[switch]$BuildAndStart
-)
-
-# ===================================================
-# Build Whole Stack
-#
-# Use flag:
-#     -BuildAndStart - To build images and start them
-#
-# NOTE: By default only build will be executed
-# ===================================================
 
 #
 # Build sequence

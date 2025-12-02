@@ -39,7 +39,7 @@ Write-Host "2. Wating for services to start ($SleepSeconds seconds)..." -Foregro
 Start-Sleep -Seconds $SleepSeconds
 Write-Host ""
 
-# Step 3: Test whole stack's health
+# Step 3: Test whole stack's Health
 Write-Host "3. Running stack's healthcheck..." -ForegroundColor Yellow
 & $TestScript
 Write-Host ""
