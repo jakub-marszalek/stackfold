@@ -25,27 +25,27 @@ if (Test-Path $ConfigFile) {
 # Display list of PowerShell scripts
 $scriptInfo = @(
     @{
-        Script = "test-stack.ps1"
-        Description = "Performs a full health check of all services in the stack."
+        Script = "stack-test.ps1"
+        Description = "Performs a full Health check of all services in the stack."
         Flags = "None"
     },
     @{
-        Script = "start-stack.ps1"
-        Description = "Starts the stack based on already built images and runs the health check."
+        Script = "stack-up.ps1"
+        Description = "Starts the stack based on already built images and runs the Health check."
         Flags = "None"
     },
     @{
-        Script = "build-stack.ps1"
+        Script = "stack-build.ps1"
         Description = "Builds Docker images for the entire stack."
         Flags = "-BuildAndStart (build and start stack)"
     },
     @{
-        Script = "shutdown-stack.ps1"
+        Script = "stack-down.ps1"
         Description = "Stops all containers in the stack."
         Flags = "-Remove (also removes volumes)"
     },
     @{
-        Script = "reset-stack.ps1"
+        Script = "stack-reset.ps1"
         Description = "Performs a full stack reset: shutdown + build + start."
         Flags = "None"
     }
@@ -78,5 +78,5 @@ foreach ($s in $scriptInfo) {
 # Display footer
 Write-Host ""
 Write-Host "Usage: .\scripts\PowerShell\<script_name>.ps1 [flags]" -ForegroundColor Cyan
-Write-Host "Example: .\scripts\PowerShell\build-stack.ps1 -BuildAndStart" -ForegroundColor Cyan
+Write-Host "Example: .\scripts\PowerShell\stack-build.ps1 -BuildAndStart" -ForegroundColor Cyan
 DrawLine

@@ -9,8 +9,8 @@ $Author      = "Jakub Marszalek / hesoyamcc"
 $Environment = "Development"
 $Version     = "1.0.0"
 $Description = @"
-Stacker is an automation tool designed to streamline the setup,
+Stackr is an automation tool designed to streamline the setup,
 build, and management of new Laravelprojects using Docker.
-It handles container orchestration, health checks, and environment
+It handles container orchestration, Health checks, and environment
 setup, enabling developers to start new projects quickly and consistently.
 "@
