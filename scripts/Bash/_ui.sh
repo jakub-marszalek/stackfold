@@ -22,6 +22,13 @@ WHITE="\033[1;37m"
 # shellcheck disable=SC2034
 DARK_GREY="\033[90m"
 
+# Info tags
+START_TAG="[START]"
+TEST_TAG="[TEST]"
+BUILD_TAG="[BUILD]"
+SHUTDOWN_TAG="[SHUTDOWN]"
+RESET_TAG="[RESET]"
+
 # UI constants
 declare -A UIConfig=(
     [LineChar]="-"
