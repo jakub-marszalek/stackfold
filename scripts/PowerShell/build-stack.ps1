@@ -3,26 +3,13 @@
 # All Rights Reserved.
 #
 
-param(
-    [switch]$BuildAndStart
-)
-
-# ===================================================
-# Build Whole Stack
-#
-# Use flag:
-#     -BuildAndStart - To build images and start them
-#
-# NOTE: By default only build will be executed
-# ===================================================
-
 #
 # Configuration / Constants
 #
 # Path related constants
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $RootDir = Resolve-Path (Join-Path $ScriptDir "..\..")
-$UpScript = Join-Path $PSScriptRoot "stack-up.ps1"
+$StartScript = Join-Path $PSScriptRoot "start-stack.ps1"
 $UiFile = Join-Path $ScriptDir "_ui.ps1"
 $EnvFile = Join-Path $RootDir ".env.docker"
 
@@ -33,6 +20,20 @@ if (Test-Path $UiFile) {
     Write-Host "UI helper file not found: $UiFile" -ForegroundColor Red
     exit 1
 }
+
+# Arguments / Flags
+param(
+[switch]$BuildAndStart
+)
+
+# ===================================================
+# Build Whole Stack
+#
+# Use flag:
+#     -BuildAndStart - To build images and start them
+#
+# NOTE: By default only build will be executed
+# ===================================================
 
 #
 # Build sequence
@@ -51,14 +52,15 @@ if (-Not (Test-Path $EnvFile)) {
 }
 
 # Step 1: Build whole docker stack
-Write-Host "$BUILD_TAG Building docker stack..." -ForegroundColor Yellow
+Write-Host "1. Building docker stack..." -ForegroundColor Yellow
 docker-compose --env-file $EnvFile build --no-cache
+Write-Host ""
 
 # Step 2: (If build and start enabled)
 if ($BuildAndStart) {
+    Write-Host "2. Starting docker stack..." -ForegroundColor Yellow
+    & $StartScript
     Write-Host ""
-    Write-Host "$BUILD_TAG Starting docker stack..." -ForegroundColor Yellow
-    & $UpScript
 }
 
 # Summary

@@ -8,8 +8,8 @@
 #
 # Path related constants
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$ShutdownScript = Join-Path $PSScriptRoot "stack-down.ps1"
-$BuildScript = Join-Path $PSScriptRoot "stack-build.ps1"
+$ShutdownScript = Join-Path $PSScriptRoot "shutdown-stack.ps1"
+$BuildScript = Join-Path $PSScriptRoot "build-stack.ps1"
 $UiFile = Join-Path $ScriptDir "_ui.ps1"
 
 # Import UI file
@@ -26,12 +26,14 @@ if (Test-Path $UiFile) {
 writeHeader -Text "Reseting docker stack..."
 
 # Step 1: Shutdown stack and remove volumes
-Write-Host "$RESET_TAG Whole stack shutting down..." -ForegroundColor Yellow
+Write-Host "1. Whole stack shutting down..." -ForegroundColor Yellow
 & $ShutdownScript -Remove
+Write-Host ""
 
 # Step 2: Clean build with startup
-Write-Host "$RESET_TAG Building and starting stack..." -ForegroundColor Yellow
+Write-Host "2. Building and starting stack..." -ForegroundColor Yellow
 & $BuildScript -BuildAndStart
+Write-Host ""
 
 # Summary
 writeHeader -Text "Reset completed"

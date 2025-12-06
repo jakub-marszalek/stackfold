@@ -11,8 +11,8 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 ENV_FILE="$PROJECT_ROOT/.env.docker"
-STACK_UP_FILE="$SCRIPT_DIR/stack-up.sh"
-STACK_UP_PATH="$SCRIPT_DIR/Bash/stack-up.sh"
+START_STACK_FILE="$SCRIPT_DIR/start-stack.sh"
+START_STACK_PATH="$SCRIPT_DIR/Bash/start-stack.sh"
 
 # Load UI file
 source "$SCRIPT_DIR"/_ui.sh
@@ -43,7 +43,8 @@ if [ "$BUILD_AND_START" = true ]; then
 fi
 
 # Step 1: Build docker stack
-printSection "$BUILD_TAG Building docker stack..."
+printSection "1. Building docker stack..."
+
 if docker-compose --env-file "$ENV_FILE" build --no-cache; then
   echo -e "${GREEN}Docker build completed successfully.${RESET}\n"
 else
@@ -53,15 +54,16 @@ fi
 
 # Step 2: Optionally start stack
 if [ "$BUILD_AND_START" = true ]; then
-  printSection "$BUILD_TAG Starting docker stack..."
+  printSection "2. Starting docker stack..."
 
-  if [ -f "$STACK_UP_PATH" ]; then
-    bash "$STACK_UP_PATH"
-  elif [ -f "$STACK_UP_FILE" ]; then
-    bash "$STACK_UP_FILE"
+  if [ -f "$START_STACK_PATH" ]; then
+    bash "$START_STACK_PATH"
+  elif [ -f "$START_STACK_FILE" ]; then
+    bash "$START_STACK_FILE"
   else
-    echo -e "${RED}Start script not found! Expected $STACK_UP_PATH or $STACK_UP_FILE${RESET}"
+    echo -e "${RED}Start script not found! Expected $START_STACK_PATH or $START_STACK_FILE${RESET}"
   fi
+  echo ""
 fi
 
 # Summary

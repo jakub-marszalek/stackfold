@@ -3,19 +3,6 @@
 # All Rights Reserved.
 #
 
-param(
-    [switch]$Remove
-)
-
-# ===================================================
-# Shut down whole stack
-#
-# Use flag:
-#     -Remove    - To also remove volumes
-#
-# NOTE: By default none of the volumes will be removed
-# ====================================================
-
 #
 # Configuration / Constants
 #
@@ -33,6 +20,20 @@ if (Test-Path $UiFile) {
     exit 1
 }
 
+# Arguments / Flags
+param(
+[switch]$Remove
+)
+
+# ===================================================
+# Shut down whole stack
+#
+# Use flag:
+#     -Remove    - To also remove volumes
+#
+# NOTE: By default none of the volumes will be removed
+# ====================================================
+
 #
 # Shutdown sequence
 #
@@ -40,13 +41,13 @@ writeHeader -Text "Stack shutting down..."
 
 # Step 1: Shutdown whole docker stack
 if ($Remove) {
-    Write-Host "Option: Remove volumes" -ForegroundColor Cyan
-    Write-Host ""
-    Write-Host "$SHUTDOWN_TAG Whole stack shutting down (removing volumes)..." -ForegroundColor Yellow
+    Write-Host "1. Whole stack shutting down (removing volumes)..." -ForegroundColor Yellow
     docker-compose --env-file $EnvFile down -v
+    Write-Host ""
 } else {
-    Write-Host "$SHUTDOWN_TAG Whole stack shutting down (keeping volumes)..." -ForegroundColor Yellow
+    Write-Host "1. Whole stack shutting down (keeping volumes)..." -ForegroundColor Yellow
     docker-compose --env-file $EnvFile down
+    Write-Host ""
 }
 
 # Summary

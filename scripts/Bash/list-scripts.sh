@@ -11,11 +11,11 @@ source "$SCRIPT_DIR"/_list-config.sh
 
 # Scripts info list
 scripts=(
-  "stack-test.sh|Performs a full health check of all services in the stack.|None"
-  "stack-up.sh|Starts the stack based on already built images and runs the health check.|None"
-  "stack-build.sh|Builds Docker images for the entire stack.|--build-and-start (build and start stack)"
-  "stack-down.sh|Stops all containers in the stack.|--remove (also removes volumes)"
-  "stack-reset.sh|Performs a full stack reset: shutdown + build + start.|None"
+  "test-stack.sh|Performs a full health check of all services in the stack.|None"
+  "start-stack.sh|Starts the stack based on already built images and runs the health check.|None"
+  "build-stack.sh|Builds Docker images for the entire stack.|--build-and-start (build and start stack)"
+  "stop-stack.sh|Stops all containers in the stack.|--remove (also removes volumes)"
+  "reset-stack.sh|Performs a full stack reset: shutdown + build + start.|None"
   "list-scripts.sh|Lists all available scripts.|None"
 )
 
@@ -50,5 +50,5 @@ done
 
 # Display footer
 echo -e "\n${CYAN}Usage:${RESET} ./scripts/Bash/<script-name>.sh [flags]"
-echo -e "${CYAN}Example:${RESET} ./scripts/Bash/stack-build.sh --bs"
+echo -e "${CYAN}Example:${RESET} ./scripts/Bash/build-stack.sh --build-and-start"
 drawLine

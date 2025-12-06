@@ -17,13 +17,6 @@ $global:UIConfig = @{
     SeparatorLineColor = "DarkGray"
 }
 
-# Info tags used in scripts
-$START_TAG="[START]"
-$TEST_TAG="[TEST]"
-$BUILD_TAG="[BUILD]"
-$SHUTDOWN_TAG="[SHUTDOWN]"
-$RESET_TAG="[RESET]"
-
 #
 # UI functions
 #
