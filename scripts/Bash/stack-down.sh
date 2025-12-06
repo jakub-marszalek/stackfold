@@ -36,16 +36,19 @@ done
 #
 printHeader "Stack shutting down..."
 
+# Step 1: Check if --remove flag is set
 if [ "$REMOVE_VOLUMES" = true ]; then
-  printSection "1. Whole stack shutting down (removing volumes)..."
+  echo -e "${CYAN}Option: Remove volumes${RESET}\n"
+  printSection "$SHUTDOWN_TAG Whole stack shutting down (removing volumes)..."
   output=$(docker-compose --env-file "$ENV_FILE" down -v)
   status=$?
 else
-  printSection "1. Whole stack shutting down (keeping volumes)..."
+  printSection "$SHUTDOWN_TAG Whole stack shutting down (keeping volumes)..."
   output=$(docker-compose --env-file "$ENV_FILE" down)
   status=$?
 fi
 
+# Step 2: Echo output
 echo "$output"
 
 if [ "$status" -eq 0 ]; then
@@ -54,7 +57,6 @@ else
   echo -e "\n${RED}Failed to shut down Docker stack!${RESET}"
   exit 1
 fi
-echo ""
 
 # Summary
 printHeader "Shutdown completed"

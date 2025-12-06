@@ -40,13 +40,13 @@ writeHeader -Text "Stack shutting down..."
 
 # Step 1: Shutdown whole docker stack
 if ($Remove) {
-    Write-Host "1. Whole stack shutting down (removing volumes)..." -ForegroundColor Yellow
+    Write-Host "Option: Remove volumes" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "$SHUTDOWN_TAG Whole stack shutting down (removing volumes)..." -ForegroundColor Yellow
     docker-compose --env-file $EnvFile down -v
-    Write-Host ""
 } else {
-    Write-Host "1. Whole stack shutting down (keeping volumes)..." -ForegroundColor Yellow
+    Write-Host "$SHUTDOWN_TAG Whole stack shutting down (keeping volumes)..." -ForegroundColor Yellow
     docker-compose --env-file $EnvFile down
-    Write-Host ""
 }
 
 # Summary
