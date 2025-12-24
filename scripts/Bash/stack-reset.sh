@@ -32,7 +32,6 @@ else
   echo -e "${RED}Shutdown script not found! Expected $STACK_DOWN_PATH or $STACK_DOWN_FILE${RESET}"
   exit 1
 fi
-echo ""
 
 # Step 2: Clean build with startup
 printSection "$RESET_TAG Rebuilding and starting stack..."
