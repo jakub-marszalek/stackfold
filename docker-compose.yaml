@@ -37,10 +37,11 @@ services:
     environment:
       - PHP_IDE_CONFIG=serverName=Laravel
     healthcheck:
-      test: [ "CMD", "php-fpm", "-t" ]
-      interval: 30s
+      test: [ "CMD-SHELL", "php-fpm -t && test -d /var/www/html/vendor" ]
+      interval: 10s
       timeout: 10s
-      retries: 3
+      retries: 10
+      start_period: 120s
 
   db:
     image: postgres:15
