@@ -19,9 +19,15 @@ RUN apk add --no-cache \
     && pecl install redis \
     && docker-php-ext-enable redis
 
-# Install composer
+# Copy composer
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
 WORKDIR /var/www/html
 
+# Copy entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Run entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]
