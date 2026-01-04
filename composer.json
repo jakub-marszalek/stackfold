@@ -1,13 +1,13 @@
 {
-  "name": "vendor_name/stackr",
-  "description": "Stackr is an automation tool designed to streamline the setup,\nbuild, and management of new Laravel projects using Docker.",
+  "name": "vendor_name/stackfold",
+  "description": "Stackfold is an automation tool designed to streamline the setup,\nbuild, and management of new Laravel projects using Docker.",
   "type": "project",
   "minimum-stability": "stable",
   "license": "proprietary",
   "authors": [
     {
-      "name": "Jakub Marszalek",
-      "email": "kuba.marszalek05@gmail.com",
+      "name": "hesoyamcc",
+      "email": "xxx@gmail.com",
       "role": "Developer"
     }
   ],

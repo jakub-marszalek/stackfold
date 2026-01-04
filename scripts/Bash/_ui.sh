@@ -47,11 +47,11 @@ RESET="\033[0m"
 
 # Print Stackr logo
 showLogo() {
-    echo -e "${UIConfig[TitleColor]}    _____ __             __   ____  ${RESET}"
-    echo -e "${UIConfig[TitleColor]}   / ___// /_____  _____/ /__/ __ \ ${RESET}"
-    echo -e "${UIConfig[TitleColor]}   \__ \/ __/ __ '/ ___/ //_/ /_/ / ${RESET}"
-    echo -e "${UIConfig[TitleColor]}  ___/ / /_/ /_/ / /__/ ,< / _, _/  ${RESET}"
-    echo -e "${UIConfig[TitleColor]} /____/\__/\__,_/\___/_/|_/_/ |_|   ${RESET}"
+    echo -e "${UIConfig[TitleColor]}    _____ __             __   ____      __    __ ${RESET}"
+    echo -e "${UIConfig[TitleColor]}   / ___// /_____ ______/ /__/ __/___  / /___/ / ${RESET}"
+    echo -e "${UIConfig[TitleColor]}   \__ \/ __/ __ '/ ___/ //_/ /_/ __ \/ / __  /  ${RESET}"
+    echo -e "${UIConfig[TitleColor]}  ___/ / /_/ /_/ / /__/ ,< / __/ /_/ / / /_/ /   ${RESET}"
+    echo -e "${UIConfig[TitleColor]} /____/\__/\__,_/\___/_/|_/_/  \____/_/\__,_/    ${RESET}"
     echo
 }
 
