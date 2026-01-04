@@ -30,11 +30,11 @@ $RESET_TAG="[RESET]"
 
 # Print Stackr logo
 function showLogo {
-    Write-Host "   ____  _             _       ____   " -ForegroundColor Cyan
-    Write-Host "  / ___|| |_ ____  ___| | ___ |  _ \  " -ForegroundColor Cyan
-    Write-Host "  \___ \| __/ _  |/ __| |/ __|| |_)_| " -ForegroundColor Cyan
-    Write-Host "   ___) | |( (_| | (__|   (__ |    \  " -ForegroundColor Cyan
-    Write-Host "  |____/ \__\__,_|\___|_|\___|\_|\__\ " -ForegroundColor Cyan
+    Write-Host "    _____ __             __   ____      __    __ " -ForegroundColor Cyan
+    Write-Host "   / ___// /_____ ______/ /__/ __/___  / /___/ / " -ForegroundColor Cyan
+    Write-Host "   \__ \/ __/ __ '/ ___/ //_/ /_/ __ \/ / __  /  " -ForegroundColor Cyan
+    Write-Host "  ___/ / /_/ /_/ / /__/ ,< / __/ /_/ / / /_/ /   " -ForegroundColor Cyan
+    Write-Host " /____/\__/\__,_/\___/_/|_/_/  \____/_/\__,_/    " -ForegroundColor Cyan
     Write-Host ""
 }
 
