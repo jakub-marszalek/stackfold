@@ -1,17 +1,12 @@
 <?php
 
-/*
- * Copyright (c) 2025. Jakub Marszałek / hesoyamcc
- * All Rights Reserved.
- */
-
 declare(strict_types=1);
 
 namespace Health\Stack\Checks;
 
 use Health\Stack\Contracts\HealthCheckInterface;
 
-class NetworkCheck implements HealthCheckInterface
+class Network implements HealthCheckInterface
 {
     private const array STACK_SERVICES = ['db', 'redis'];
 
@@ -24,7 +19,7 @@ class NetworkCheck implements HealthCheckInterface
     ];
 
     /**
-     * Check network connectivity
+     * Check the network connectivity.
      *
      * @return array
      */
@@ -36,7 +31,7 @@ class NetworkCheck implements HealthCheckInterface
     }
 
     /**
-     * Check if all checks passed
+     * Check if all checks were passed.
      *
      * @return bool
      */
@@ -46,7 +41,7 @@ class NetworkCheck implements HealthCheckInterface
             return false;
         }
         foreach ($this->result['dns_resolution'] as $ip) {
-            if (!$ip) {
+            if ($ip === null) {
                 return false;
             }
         }
@@ -54,16 +49,14 @@ class NetworkCheck implements HealthCheckInterface
     }
 
     /**
-     * Resolve DNS for listed services
+     * Resolve DNS for all listed services.
      *
      * @return array
      */
     private function resolveDns(): array
     {
-        $hostnames = self::STACK_SERVICES;
         $resolved = [];
-
-        foreach ($hostnames as $hostname) {
+        foreach (self::STACK_SERVICES as $hostname) {
             $records = dns_get_record($hostname . '.', DNS_A | DNS_AAAA);
             if (empty($records)) {
                 $resolved[$hostname] = null;
@@ -76,7 +69,7 @@ class NetworkCheck implements HealthCheckInterface
     }
 
     /**
-     * Get IP addresses from DNS records
+     * Get IP addresses from DNS records.
      *
      * @param array $records
      * @return array

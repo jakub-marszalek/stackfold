@@ -1,25 +1,30 @@
 {
-  "name": "vendor_name/stackfold",
-  "description": "Stackfold is an automation tool designed to streamline the setup,\nbuild, and management of new Laravel projects using Docker.",
+  "name": "hesoyamcc/stackfold",
+  "description": "Automation tool to streamline the setup, build, and management of new Laravel projects using Docker.",
   "type": "project",
-  "minimum-stability": "stable",
-  "license": "proprietary",
+  "license": "MIT",
+  "keywords": ["laravel", "docker", "devops", "php", "health-check"],
   "authors": [
     {
-      "name": "hesoyamcc",
+      "name": "Jakub Marszałek",
       "email": "xxx@gmail.com",
-      "role": "Developer"
+      "homepage": "https://gitlab.com/hesoyamcc"
     }
   ],
-  "require": {
-    "vlucas/phpdotenv": "^5.0",
-    "ext-pdo": "*",
-    "ext-redis": "*"
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.11",
+    "phpmd/phpmd": "^2.15"
   },
   "autoload": {
     "psr-4": {
       "App\\": "app/",
-      "Health\\": "docker/Health/"
+      "Health\\": "src/Health/"
     }
+  },
+  "require": {
+    "php": "^8.3",
+    "vlucas/phpdotenv": "^5.6",
+    "ext-pdo": "*",
+    "ext-redis": "*"
   }
 }

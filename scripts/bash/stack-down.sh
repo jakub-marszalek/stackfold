@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-#
-# Copyright (c) 2025. Jakub Marszałek / hesoyamcc
-# All Rights Reserved.
-#
 
 #
 # Configuration / Constants
@@ -40,11 +36,11 @@ printHeader "Stack shutting down..."
 if [ "$REMOVE_VOLUMES" = true ]; then
   echo -e "${CYAN}Option: Remove volumes${RESET}\n"
   printSection "$SHUTDOWN_TAG Whole stack shutting down (removing volumes)..."
-  output=$(docker-compose --env-file "$ENV_FILE" down -v)
+  output=$(docker compose --env-file "$ENV_FILE" down -v)
   status=$?
 else
   printSection "$SHUTDOWN_TAG Whole stack shutting down (keeping volumes)..."
-  output=$(docker-compose --env-file "$ENV_FILE" down)
+  output=$(docker compose --env-file "$ENV_FILE" down)
   status=$?
 fi
 

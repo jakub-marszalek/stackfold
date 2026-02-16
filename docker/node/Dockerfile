@@ -1,8 +1,3 @@
-#
-# Copyright (c) 2025. Jakub Marszałek / hesoyamcc
-# All Rights Reserved.
-#
-
 FROM node:22-alpine
 
 WORKDIR /var/www/html

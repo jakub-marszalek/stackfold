@@ -1,8 +1,4 @@
 #!/bin/sh
-#
-# Copyright (c) 2025. Jakub Marszałek / hesoyamcc
-# All Rights Reserved.
-#
 
 set -e
 

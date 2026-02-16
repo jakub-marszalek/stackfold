@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-#
-# Copyright (c) 2025. Jakub Marszałek / hesoyamcc
-# All Rights Reserved.
-#
 
 #
 # Configuration / Constants
@@ -14,7 +10,7 @@ ENV_FILE="$PROJECT_ROOT/.env.docker"
 
 # Stack related constants
 PHP_CONTAINER="php"
-PHP_HEALTH_CHECK_FILE="/var/www/html/docker/Health/Stack/stack_health_check.php"
+PHP_HEALTH_CHECK_FILE="/var/www/html/src/Health/Stack/stack_health_check.php"
 NGINX_URL="http://localhost:8080"
 VITE_CONTAINER="node"
 VITE_LOG_SEARCH="ready in"
@@ -37,7 +33,7 @@ printHeader "Testing docker stack..."
 
 # 1. Docker Compose Status
 printSection "$TEST_TAG Testing Docker Compose Status..."
-docker-compose --env-file "$ENV_FILE" ps
+docker compose --env-file "$ENV_FILE" ps
 echo ""
 
 # 2. Nginx server HTTP check
@@ -56,7 +52,7 @@ echo ""
 
 # 3. PHP Health Check
 printSection "$TEST_TAG Testing PHP Stack..."
-php_result=$(docker-compose --env-file "$ENV_FILE" exec -T "$PHP_CONTAINER" php "$PHP_HEALTH_CHECK_FILE" 2>/dev/null)
+php_result=$(docker compose --env-file "$ENV_FILE" exec -T "$PHP_CONTAINER" php "$PHP_HEALTH_CHECK_FILE" 2>/dev/null)
 if [ -n "$php_result" ]; then
   # pretty-print JSON if jq is available
   if command -v jq &>/dev/null; then
@@ -71,7 +67,7 @@ echo ""
 
 # 4. Vite Dev Server
 printSection "$TEST_TAG Testing Vite Dev Server..."
-vite_status=$(docker-compose --env-file "$ENV_FILE" logs --tail=5 "$VITE_CONTAINER" | grep "$VITE_LOG_SEARCH")
+vite_status=$(docker compose --env-file "$ENV_FILE" logs --tail=5 "$VITE_CONTAINER" | grep "$VITE_LOG_SEARCH")
 if [ -n "$vite_status" ]; then
   echo -e "${GREEN}Vite: Running${RESET}"
   echo "$vite_status"
