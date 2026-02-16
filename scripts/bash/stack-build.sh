@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-#
-# Copyright (c) 2025. Jakub Marszałek / hesoyamcc
-# All Rights Reserved.
-#
 
 #
 # Configuration / Constants
@@ -44,7 +40,7 @@ fi
 
 # Step 1: Build docker stack
 printSection "$BUILD_TAG Building docker stack..."
-if docker-compose --env-file "$ENV_FILE" build --no-cache; then
+if docker compose --env-file "$ENV_FILE" build --no-cache; then
   echo -e "${GREEN}Docker build completed successfully.${RESET}\n"
 else
   echo -e "${RED}Docker build failed!${RESET}\n"

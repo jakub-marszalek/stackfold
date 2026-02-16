@@ -1,24 +1,14 @@
 <?php
 
-/*
- * Copyright (c) 2025. Jakub Marszałek / hesoyamcc
- * All Rights Reserved.
- */
-
 declare(strict_types=1);
 
 namespace Health\Stack\Checks;
 
 use Health\Stack\Contracts\HealthCheckInterface;
 
-class PhpCheck implements HealthCheckInterface
+class Php implements HealthCheckInterface
 {
-    /**
-     * List of extensions to check
-     *
-     * @var array|string[]
-     */
-    private array $extensions = [
+    private const array EXTENSIONS = [
         'pdo',
         'pdo_pgsql',
         'redis',
@@ -26,12 +16,7 @@ class PhpCheck implements HealthCheckInterface
         'json'
     ];
 
-    /**
-     * List of main ini settings to check
-     *
-     * @var array|string[]
-     */
-    private array $iniSettings = [
+    private const array INI_SETTINGS = [
         'memory_limit',
         'max_execution_time'
     ];
@@ -42,7 +27,7 @@ class PhpCheck implements HealthCheckInterface
     private bool $allPassed = true;
 
     /**
-     * Return php version, extensions and main ini settings
+     * Return php version, extensions and main ini settings.
      *
      * @return array
      */
@@ -56,7 +41,7 @@ class PhpCheck implements HealthCheckInterface
     }
 
     /**
-     * Check if all checks passed
+     * Check if all checks passed.
      *
      * @return bool
      */
@@ -76,7 +61,7 @@ class PhpCheck implements HealthCheckInterface
     private function getLoadedExtensionsStatuses(): array
     {
         $loadedExtensions = [];
-        foreach ($this->extensions as $extension) {
+        foreach (self::EXTENSIONS as $extension) {
             $loadedExtensions[$extension] = extension_loaded($extension);
             if (!$loadedExtensions[$extension]) {
                 $this->allPassed = false;
@@ -93,7 +78,7 @@ class PhpCheck implements HealthCheckInterface
     private function getMainIniSettings(): array
     {
         $mainIniSettings = [];
-        foreach ($this->iniSettings as $setting) {
+        foreach (self::INI_SETTINGS as $setting) {
             $mainIniSettings[$setting] = ini_get($setting);
         }
         return $mainIniSettings;

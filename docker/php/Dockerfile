@@ -1,7 +1,3 @@
-#
-# Copyright (c) 2025. Jakub Marszałek / hesoyamcc
-# All Rights Reserved.
-#
 
 FROM php:8.3-fpm-alpine
 

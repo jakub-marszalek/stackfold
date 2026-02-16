@@ -1,10 +1,5 @@
 <?php
 
-/*
- * Copyright (c) 2025. Jakub Marszałek / hesoyamcc
- * All Rights Reserved.
- */
-
 declare(strict_types=1);
 
 namespace Health\Stack\Checks;
@@ -15,9 +10,9 @@ use Throwable;
 
 class RedisCheck implements HealthCheckInterface
 {
-    private const string REDIS_HOST_NAME = 'redis';
-    private const int REDIS_PORT = 6379;
-    private const int REDIS_TIMEOUT = 5;
+    private const string HOST = 'redis';
+    private const int PORT = 6379;
+    private const int TIMEOUT = 2;
 
     /**
      * @var Redis|null
@@ -41,7 +36,7 @@ class RedisCheck implements HealthCheckInterface
     private bool $allPassed = false;
 
     /**
-     * Check Redis connection
+     * Check the connection with Redis.
      *
      * @return array
      */
@@ -56,22 +51,18 @@ class RedisCheck implements HealthCheckInterface
         return $this->result;
     }
 
-
     /**
-     * Check if all checks passed
+     * Check if all checks were passed.
      *
      * @return bool
      */
     public function isHealthy(): bool
     {
-        if (!$this->allPassed) {
-            return false;
-        }
-        return true;
+        return $this->allPassed;
     }
 
     /**
-     * Connect to Redis
+     * Connect to the Redis.
      *
      * @return bool
      */
@@ -80,9 +71,9 @@ class RedisCheck implements HealthCheckInterface
         $redis = new Redis();
         try {
             $redis->connect(
-                self::REDIS_HOST_NAME,
-                self::REDIS_PORT,
-                self::REDIS_TIMEOUT
+                self::HOST,
+                self::PORT,
+                self::TIMEOUT
             );
             $this->redis = $redis;
             $this->result['status'] = 'connected';
@@ -95,11 +86,11 @@ class RedisCheck implements HealthCheckInterface
     }
 
     /**
-     * Test Redis Ping command response
+     * Check Redis response for the ping command.
      *
      * @return bool
      */
-    private function testPing(): bool
+    private function checkPing(): bool
     {
         $response = $this->redis->ping();
         if ($response === true) {
@@ -110,13 +101,13 @@ class RedisCheck implements HealthCheckInterface
     }
 
     /**
-     * Test Redis and get server info
+     * Test Redis with the ping command and get server info.
      *
      * @return void
      */
     private function getTestInfo(): void
     {
-        if ($this->testPing()) {
+        if ($this->checkPing()) {
             $testKey = 'health_check' . time();
             $testValue = 'test_' . uniqid();
 

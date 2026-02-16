@@ -1,45 +1,38 @@
 <?php
 
-/*
- * Copyright (c) 2025. Jakub Marszałek / hesoyamcc
- * All Rights Reserved.
- */
-
 declare(strict_types=1);
 
 namespace Health;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
-use Health\Stack\Checks\NetworkCheck;
-use Health\Stack\Checks\PhpCheck;
-use Health\Stack\Checks\PostgreCheck;
+use Health\Stack\Checks\Network;
+use Health\Stack\Checks\Php;
+use Health\Stack\Checks\Postgres;
 use Health\Stack\Checks\RedisCheck;
 use Health\Stack\HealthChecker;
 
+// Configure ini settings
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 0);
 ini_set('error_log', 'health_check_error.log');
 
-// Create all checks with a health checker
+// Create all checks and the health checker
 $checks = [
-    'php' => new PhpCheck(),
-    'database' => new PostgreCheck(),
+    'php' => new Php(),
+    'database' => new Postgres(),
     'redis' => new RedisCheck(),
-    'network' => new NetworkCheck(),
+    'network' => new Network(),
 ];
-
 $healthChecker = new HealthChecker();
 
-// Register all checks
+// Register all checks and execute them
 foreach ($checks as $name => $check) {
     $healthChecker->register($name, $check);
 }
-
-// Execute checks
 $result = $healthChecker->run();
 
-// Return result as JSON
+// Return the results in JSON format
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);

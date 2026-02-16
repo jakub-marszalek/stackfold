@@ -1,10 +1,5 @@
 <?php
 
-/*
- * Copyright (c) 2025. Jakub Marszałek / hesoyamcc
- * All Rights Reserved.
- */
-
 declare(strict_types=1);
 
 namespace Health\Stack;
@@ -25,7 +20,7 @@ class HealthChecker implements HealthCheckerInterface
     private array $result = [];
 
     /**
-     * Register check
+     * Register a health check.
      *
      * @param string $name
      * @param HealthCheckInterface $check
@@ -37,7 +32,7 @@ class HealthChecker implements HealthCheckerInterface
     }
 
     /**
-     * Run checks
+     * Run all registered health checks.
      *
      * @return array|array[]
      */
@@ -51,7 +46,7 @@ class HealthChecker implements HealthCheckerInterface
     }
 
     /**
-     * Summarize checks
+     * Summarize results.
      *
      * @return void
      */
