@@ -1,4 +1,3 @@
-
 FROM php:8.3-fpm-alpine
 
 # Install packages
@@ -17,11 +16,17 @@ RUN apk add --no-cache \
 
 # Copy composer
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
-
 WORKDIR /var/www/html
 
+COPY composer.json composer.lock ./
+
+# Run composer install
+RUN composer install --no-interaction --no-scripts --no-autoloader --prefer-dist
+COPY . .
+RUN composer dump-autoload --optimize
+
 # Copy entrypoint
-COPY entrypoint.sh /entrypoint.sh
+COPY docker/php/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Run entrypoint

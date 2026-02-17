@@ -5,13 +5,11 @@ set -e
 cd /var/www/html
 
 if [ ! -d vendor ]; then
-  echo "[php] vendor missing – running composer install"
-  composer install \
-    --no-interaction \
-    --prefer-dist \
-    --no-progress
+  echo "[php] vendor missing on mounted volume – running composer install"
+  composer install --no-interaction --prefer-dist
 else
-  echo "[php] vendor exists – skipping composer install"
+  echo "[php] vendor exists – refreshing autoloader"
+  composer dump-autoload
 fi
 
 exec "$@"
