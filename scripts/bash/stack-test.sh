@@ -15,16 +15,26 @@ NGINX_URL="http://localhost:8080"
 VITE_CONTAINER="node"
 VITE_LOG_SEARCH="ready in"
 
-# Ports definition (name:port)
+# Load UI file
+source "$SCRIPT_DIR"/_ui.sh
+
+#
+# Read dynamic ports from .env.docker
+# Redis and Vite stay conventional — only HTTP and DB are user-configurable.
+#
+HTTP_PORT=$(grep -E '^HTTP_PORT=' "$ENV_FILE" | cut -d '=' -f2)
+DB_PORT=$(grep -E '^DB_PORT=' "$ENV_FILE" | cut -d '=' -f2)
+HTTP_PORT=${HTTP_PORT:-8080}
+DB_PORT=${DB_PORT:-5432}
+
+NGINX_URL="http://localhost:${HTTP_PORT}"
+
 declare -A PORTS=(
-  ["Nginx"]=8080
-  ["PostgreSQL"]=5432
+  ["Nginx"]=$HTTP_PORT
+  ["PostgreSQL"]=$DB_PORT
   ["Redis"]=6379
   ["Vite"]=5173
 )
-
-# Load UI file
-source "$SCRIPT_DIR"/_ui.sh
 
 #
 # Stack tests sequence
@@ -53,11 +63,15 @@ echo ""
 # 3. PHP Health Check
 printSection "$TEST_TAG Testing PHP Stack..."
 php_result=$(docker compose --env-file "$ENV_FILE" exec -T "$PHP_CONTAINER" php "$PHP_HEALTH_CHECK_FILE" 2>/dev/null)
+
 if [ -n "$php_result" ]; then
-  # pretty-print JSON if jq is available
-  if command -v jq &>/dev/null; then
-    echo "$php_result" | jq .
+  json=$(echo "$php_result" | awk '/^\{/{found=1} found{print}')
+
+  if [ -n "$json" ] && echo "$json" | jq . >/dev/null 2>&1; then
+    echo "$json" | jq .
   else
+    echo -e "${RED}PHP health check returned no valid JSON.${RESET}"
+    echo "Raw output:"
     echo "$php_result"
   fi
 else

@@ -10,12 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const asciiLogo = `    _____ __             __   ____      __    __ 
-   / ___// /_____ ______/ /__/ __/___  / /___/ / 
-   \__ \/ __/ __ '/ ___/ //_/ /_/ __ \/ / __  /  
-  ___/ / /_/ /_/ / /__/ ,< / __/ /_/ / / /_/ /   
- /____/\__/\__,_/\___/_/|_/_/  \____/_/\__,_/`
-
 var rootCmd = &cobra.Command{
 	Use:   "stackfold",
 	Short: "Stackfold - Laravel Docker Automation",

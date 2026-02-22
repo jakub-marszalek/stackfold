@@ -9,4 +9,4 @@ echo json_encode([
         'redis' => extension_loaded('redis'),
         'intl' => extension_loaded('intl'),
     ]
-]);
+], JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES);

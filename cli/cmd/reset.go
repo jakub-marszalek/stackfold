@@ -29,11 +29,12 @@ WARNING: This command is DESTRUCTIVE. You must use the --force flag to proceed.`
 		force := GetBoolFlagOrExit(cmd, ForceFlagName)
 
 		if !force {
-			fmt.Println(ColorRed + "+------------------------------------------------------------------------------+" + ColorReset)
+			DrawLine(UIConfig.Red)
 			LogError("DESTRUCTIVE OPERATION DENIED")
 			LogWarning("This will PERMANENTLY DELETE your database volumes.")
-			fmt.Println(ColorReset + "To proceed, use: sf reset --force")
-			fmt.Println(ColorRed + "+------------------------------------------------------------------------------+" + ColorReset)
+			fmt.Println(UIConfig.Reset + "To proceed, use: sf reset --force")
+			DrawLine(UIConfig.Red)
+
 			os.Exit(1)
 		}
 
