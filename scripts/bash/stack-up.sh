@@ -1,25 +1,19 @@
 #!/usr/bin/env bash
 
-#
-# Configuration / Constants
-#
-# Path related constants
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-ENV_FILE="$PROJECT_ROOT/.env.docker"
-STACK_TEST_FILE="$SCRIPT_DIR/stack-test.sh"
-STACK_TEST_PATH="$SCRIPT_DIR/Bash/stack-test.sh"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Load UI file
-source "$SCRIPT_DIR"/_ui.sh
+# Imports
+source "$CURRENT_DIR"/_engine.sh
+source "$CURRENT_DIR"/_ui.sh
 
 # Function that waits for service to respond
 wait_for_service() {
     local service_name="$1"
     local max_retries=30
     local counter=0
-    local container_name=$(docker compose --env-file "$ENV_FILE" ps -q "$service_name")
+    local container_name
 
+    container_name=$($DOCKER_COMPOSE --env-file "$ENV_FILE" ps -q "$service_name")
     if [ -z "$container_name" ]; then
          echo -e "${RED}Service $service_name not found!${RESET}"
          return 1
@@ -46,7 +40,7 @@ printHeader "Starting docker stack..."
 
 # Step 1: Start whole docker stack
 printSection "$START_TAG Starting whole stack..."
-if docker compose --env-file "$ENV_FILE" up -d; then
+if $DOCKER_COMPOSE --env-file "$ENV_FILE" up -d; then
   echo -e "${GREEN}Docker stack started successfully.${RESET}\n"
 else
   echo -e "${RED}Failed to start Docker stack!${RESET}\n"

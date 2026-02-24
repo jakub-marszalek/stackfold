@@ -1,17 +1,10 @@
 #!/usr/bin/env bash
 
-#
-# Configuration / Constants
-#
-# Path related constants
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-ENV_FILE="$PROJECT_ROOT/.env.docker"
-STACK_UP_FILE="$SCRIPT_DIR/stack-up.sh"
-STACK_UP_PATH="$SCRIPT_DIR/Bash/stack-up.sh"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Load UI file
-source "$SCRIPT_DIR"/_ui.sh
+# Imports
+source "$CURRENT_DIR"/_engine.sh
+source "$CURRENT_DIR"/_ui.sh
 
 #
 # Parse Arguments
@@ -40,7 +33,7 @@ fi
 
 # Step 1: Build docker stack
 printSection "$BUILD_TAG Building docker stack..."
-if docker compose --env-file "$ENV_FILE" build --no-cache; then
+if $DOCKER_COMPOSE --env-file "$ENV_FILE" build --no-cache; then
   echo -e "${GREEN}Docker build completed successfully.${RESET}\n"
 else
   echo -e "${RED}Docker build failed!${RESET}\n"
