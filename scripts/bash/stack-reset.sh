@@ -1,17 +1,10 @@
 #!/usr/bin/env bash
 
-#
-# Configuration / Constants
-#
-# Path related constants
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-STACK_DOWN_FILE="$SCRIPT_DIR/stack-down.sh"
-STACK_DOWN_PATH="$SCRIPT_DIR/Bash/stack-down.sh"
-STACK_BUILD_FILE="$SCRIPT_DIR/stack-build.sh"
-STACK_BUILD_PATH="$SCRIPT_DIR/Bash/stack-build.sh"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Load UI file
-source "$SCRIPT_DIR"/_ui.sh
+# Imports
+source "$CURRENT_DIR"/_engine.sh
+source "$CURRENT_DIR"/_ui.sh
 
 #
 # Reset sequence

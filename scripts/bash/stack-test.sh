@@ -1,22 +1,19 @@
 #!/usr/bin/env bash
 
-#
-# Configuration / Constants
-#
-# Path related constants
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-ENV_FILE="$PROJECT_ROOT/.env.docker"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Stack related constants
+# Imports
+source "$CURRENT_DIR"/_engine.sh
+source "$CURRENT_DIR"/_ui.sh
+
+#
+# Constants
+#
 PHP_CONTAINER="php"
 PHP_HEALTH_CHECK_FILE="/var/www/html/src/Health/Stack/stack_health_check.php"
 NGINX_URL="http://localhost:8080"
 VITE_CONTAINER="node"
 VITE_LOG_SEARCH="ready in"
-
-# Load UI file
-source "$SCRIPT_DIR"/_ui.sh
 
 #
 # Read dynamic ports from .env.docker
@@ -37,13 +34,13 @@ declare -A PORTS=(
 )
 
 #
-# Stack tests sequence
+# Stack test sequence
 #
 printHeader "Testing docker stack..."
 
 # 1. Docker Compose Status
 printSection "$TEST_TAG Testing Docker Compose Status..."
-docker compose --env-file "$ENV_FILE" ps
+$DOCKER_COMPOSE --env-file "$ENV_FILE" ps
 echo ""
 
 # 2. Nginx server HTTP check
@@ -62,7 +59,7 @@ echo ""
 
 # 3. PHP Health Check
 printSection "$TEST_TAG Testing PHP Stack..."
-php_result=$(docker compose --env-file "$ENV_FILE" exec -T "$PHP_CONTAINER" php "$PHP_HEALTH_CHECK_FILE" 2>/dev/null)
+php_result=$($DOCKER_COMPOSE --env-file "$ENV_FILE" exec -T "$PHP_CONTAINER" php "$PHP_HEALTH_CHECK_FILE" 2>/dev/null)
 
 if [ -n "$php_result" ]; then
   json=$(echo "$php_result" | awk '/^\{/{found=1} found{print}')
@@ -81,7 +78,7 @@ echo ""
 
 # 4. Vite Dev Server
 printSection "$TEST_TAG Testing Vite Dev Server..."
-vite_status=$(docker compose --env-file "$ENV_FILE" logs --tail=5 "$VITE_CONTAINER" | grep "$VITE_LOG_SEARCH")
+vite_status=$($DOCKER_COMPOSE --env-file "$ENV_FILE" logs --tail=5 "$VITE_CONTAINER" | grep "$VITE_LOG_SEARCH")
 if [ -n "$vite_status" ]; then
   echo -e "${GREEN}Vite: Running${RESET}"
   echo "$vite_status"

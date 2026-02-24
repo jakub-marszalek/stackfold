@@ -1,15 +1,10 @@
 #!/usr/bin/env bash
 
-#
-# Configuration / Constants
-#
-# Path related constants
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-ENV_FILE="$PROJECT_ROOT/.env.docker"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Load UI file
-source "$SCRIPT_DIR"/_ui.sh
+# Imports
+source "$CURRENT_DIR"/_engine.sh
+source "$CURRENT_DIR"/_ui.sh
 
 #
 # Parse arguments
@@ -36,11 +31,11 @@ printHeader "Stack shutting down..."
 if [ "$REMOVE_VOLUMES" = true ]; then
   echo -e "${CYAN}Option: Remove volumes${RESET}\n"
   printSection "$SHUTDOWN_TAG Whole stack shutting down (removing volumes)..."
-  output=$(docker compose --env-file "$ENV_FILE" down -v)
+  output=$($DOCKER_COMPOSE --env-file "$ENV_FILE" down -v)
   status=$?
 else
   printSection "$SHUTDOWN_TAG Whole stack shutting down (keeping volumes)..."
-  output=$(docker compose --env-file "$ENV_FILE" down)
+  output=$($DOCKER_COMPOSE --env-file "$ENV_FILE" down)
   status=$?
 fi
 
