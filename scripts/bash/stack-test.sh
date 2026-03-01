@@ -78,12 +78,11 @@ echo ""
 
 # 4. Vite Dev Server
 printSection "$TEST_TAG Testing Vite Dev Server..."
-vite_status=$($DOCKER_COMPOSE --env-file "$ENV_FILE" logs --tail=5 "$VITE_CONTAINER" | grep "$VITE_LOG_SEARCH")
-if [ -n "$vite_status" ]; then
-  echo -e "${GREEN}Vite: Running${RESET}"
-  echo "$vite_status"
+vite_status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 3 "http://localhost:5173")
+if [[ "$vite_status" == "200" || "$vite_status" == "404" ]]; then
+  echo -e "${GREEN}Vite: Running (HTTP $vite_status)${RESET}"
 else
-  echo -e "${YELLOW}WARNING! Vite: Check logs with: docker-compose --env-file $ENV_FILE logs node${RESET}"
+  echo -e "${YELLOW}WARNING! Vite not responding.${RESET}"
 fi
 echo ""
 

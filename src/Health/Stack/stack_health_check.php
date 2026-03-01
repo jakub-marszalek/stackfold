@@ -6,6 +6,22 @@ namespace Health;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
+// Register Health\ namespace manually since it belongs to Stackfold, not Laravel
+spl_autoload_register(function ($class) {
+    $prefix = 'Health\\';
+    $base_dir = __DIR__ . '/../../../src/';
+
+    if (strncmp($prefix, $class, strlen($prefix)) !== 0) {
+        return;
+    }
+
+    $file = $base_dir . str_replace('\\', '/', $class) . '.php';
+
+    if (file_exists($file)) {
+        require $file;
+    }
+});
+
 use Health\Stack\Checks\Network;
 use Health\Stack\Checks\Php;
 use Health\Stack\Checks\Postgres;

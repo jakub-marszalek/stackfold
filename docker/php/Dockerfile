@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # Install packages
 RUN apk add --no-cache \
@@ -18,11 +18,11 @@ RUN apk add --no-cache \
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 WORKDIR /var/www/html
 
-COPY composer.json composer.lock ./
+COPY app/composer.json app/composer.lock ./
 
 # Run composer install
 RUN composer install --no-interaction --no-scripts --no-autoloader --prefer-dist
-COPY . .
+COPY app/ .
 RUN composer dump-autoload --optimize
 
 # Copy entrypoint

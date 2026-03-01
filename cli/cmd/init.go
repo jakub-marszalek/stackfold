@@ -1,6 +1,3 @@
-/*
-Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -42,7 +39,10 @@ func runInit() {
 	}
 
 	PrintHeader("Initializing new stack and Laravel project...")
-	RunConfigWizard()
+	cfg := RunConfigWizard()
+	WriteDockerEnv(cfg)
+	LogSuccess(".env.docker created.")
+	fmt.Println()
 
 	// Laravel Installation
 	PrintSection("Laravel Installation")
@@ -53,10 +53,10 @@ func runInit() {
 		fmt.Println("No Laravel project found in app/. Proceeding with fresh installation...")
 		fmt.Println()
 
-		// if err := InstallLaravel(); err != nil {
-		// 	LogError(fmt.Sprintf("Laravel installation failed: %v", err))
-		// 	os.Exit(1)
-		// }
+		if err := InstallLaravel(cfg); err != nil {
+			LogError(fmt.Sprintf("Laravel installation failed: %v", err))
+			os.Exit(1)
+		}
 
 		LogSuccess("Laravel installed successfully.")
 	}
