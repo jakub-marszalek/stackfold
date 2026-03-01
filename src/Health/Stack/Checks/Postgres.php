@@ -17,7 +17,7 @@ class Postgres implements HealthCheckInterface
     private const string DEFAULT_USER = 'admin';
     private const string DEFAULT_PASS = 'Admin123';
 
-    private const string SOURCE_DIRECTORY = '/app';
+    private const string SOURCE_DIRECTORY = '/var/www/html';
 
     /**
      * @var array
@@ -60,7 +60,7 @@ class Postgres implements HealthCheckInterface
      */
     public function __construct()
     {
-        $envDir = dirname(__DIR__, 4) . self::SOURCE_DIRECTORY;
+        $envDir = self::SOURCE_DIRECTORY;
         $envPath = $envDir . '/.env';
 
         if (file_exists($envPath)) {
@@ -73,9 +73,9 @@ class Postgres implements HealthCheckInterface
 
         $this->host     = self::HOST;
         $this->port     = self::PORT;
-        $this->dbname   = $_ENV['DATABASE_NAME'] ?? self::DEFAULT_DB;
-        $this->user     = $_ENV['DATABASE_USER'] ?? self::DEFAULT_USER;
-        $this->password = $_ENV['DATABASE_PASSWORD'] ?? self::DEFAULT_PASS;
+        $this->dbname   = $_ENV['DB_DATABASE'] ?? self::DEFAULT_DB;
+        $this->user     = $_ENV['DB_USERNAME'] ?? self::DEFAULT_USER;
+        $this->password = $_ENV['DB_PASSWORD'] ?? self::DEFAULT_PASS;
     }
 
     /**

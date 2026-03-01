@@ -2,5 +2,7 @@
 .vscode/
 /node_modules/
 /vendor/
+/app/
+composer.lock
 .env
 .env.docker

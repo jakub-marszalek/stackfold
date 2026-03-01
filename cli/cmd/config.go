@@ -1,6 +1,3 @@
-/*
-Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -50,7 +47,8 @@ func runConfig() {
 
 	DrawLine(UIConfig.Yellow)
 	LogWarning("You are about to update your stack configuration.")
-	fmt.Println(UIConfig.Reset + "This will NOT affect your Laravel codebase in app/.")
+	fmt.Println(UIConfig.Reset + "This will NOT affect your Laravel codebase in app/")
+	fmt.Println("except database credentials in the .env file.")
 	DrawLine(UIConfig.Yellow)
 	fmt.Println()
 
@@ -61,16 +59,17 @@ func runConfig() {
 	HandleSimpleScript(PathStackDown)
 	fmt.Println()
 
-	// Remind about volume implications
-	DrawLine(UIConfig.Yellow)
-	LogWarning("REMINDER: Changing database name or password won't update existing volumes.")
-	fmt.Println("If you changed those values, run 'stackfold reset --force' afterward.")
-	fmt.Println("Read 'stackfold reset --help' before doing so — all data will be lost.")
-	DrawLine(UIConfig.Yellow)
-	fmt.Println()
-
 	PrintHeader("Updating stack configuration...")
-	RunConfigWizard()
+	cfg := RunConfigWizard()
+	WriteEnvFiles(cfg)
+
+    // Remind about volume implications
+    DrawLine(UIConfig.Yellow)
+    LogWarning("REMINDER: Changing database name or password won't update existing volumes.")
+    fmt.Println("If you changed those values, run 'stackfold reset --force' afterward.")
+    fmt.Println("Read 'stackfold reset --help' before doing so — all data will be lost.")
+    DrawLine(UIConfig.Yellow)
+    fmt.Println()
 
 	PrintHeader("Configuration updated")
 }

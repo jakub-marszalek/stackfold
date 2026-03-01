@@ -3,7 +3,6 @@ package cmd
 import (
 	"bufio"
 	"fmt"
-	"net"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -95,129 +94,93 @@ func HandleFlaggedScript(scriptPath string, cmd *cobra.Command, flagName string,
 	HandleSimpleScript(scriptPath, bashArgs...)
 }
 
-/*
-Interactively collect project name and DB credentials,
-then write .env.docker and app/.env.
-Shared by both 'init' (first install) and 'config' (update existing).
-*/
-func RunConfigWizard() {
-	reader := bufio.NewReader(os.Stdin)
-
-	fmt.Println(UIConfig.SeparatorColor + "Tip: Leave blank to accept the [default] values." + UIConfig.Reset)
-	fmt.Println()
-
-	// --- Environment Configuration ---
-	PrintSection("Environment Configuration")
-	projectName := askQuestion(reader, "Project Name", "myapp")
-	fmt.Println()
-
-	// --- Database Credentials ---
-	PrintSection("Database Credentials")
-	dbName := askQuestion(reader, "Database Name", "mydatabase")
-	dbUser := askQuestion(reader, "Database User", "admin")
-	dbPass := askQuestion(reader, "Database Password", "admin123")
-	fmt.Println()
-
-	// --- Ports ---
-	PrintSection("Port configuration")
-	fmt.Println(UIConfig.SeparatorColor + "Change these if the default ports are already in use on your machine." + UIConfig.Reset)
-	httpPort := askPort(reader, "HTTP port (Nginx)", "8080")
-	dbPort := askPort(reader, "PostgreSQL port", "5432")
-	fmt.Println()
-
-	// --- Write env files ---
-	PrintSection("Writing configuration files...")
-	CreateEnvFile(projectName, dbName, dbUser, dbPass, httpPort, dbPort)
-	fmt.Println()
-}
-
-// Write .env.docker and app/.env with provided credentials
-func CreateEnvFile(projectName, dbName, dbUser, dbPass, httpPort, dbPort string) {
-	dockerEnv := fmt.Sprintf(`# Docker Stack Configuration
-PROJECT_NAME=%s
-
-# Containers
-CONTAINER_NGINX=${PROJECT_NAME}-nginx
-CONTAINER_PHP=${PROJECT_NAME}-php
-CONTAINER_POSTGRES=${PROJECT_NAME}-postgres
-CONTAINER_REDIS=${PROJECT_NAME}-redis
-CONTAINER_NODE=${PROJECT_NAME}-node
-
-# Ports
-HTTP_PORT=%s
-DB_PORT=%s
-
-# Postgres Credentials
-POSTGRES_DATABASE=%s
-POSTGRES_USER=%s
-POSTGRES_PASSWORD=%s
-`, projectName, httpPort, dbPort, dbName, dbUser, dbPass)
-
-	appEnv := fmt.Sprintf(`# Laravel Configuration
-DATABASE_NAME=%s
-DATABASE_USER=%s
-DATABASE_PASSWORD=%s
-`, dbName, dbUser, dbPass)
-
-	if err := os.WriteFile(".env.docker", []byte(dockerEnv), 0644); err != nil {
-		LogError(fmt.Sprintf("Failed to write .env.docker file: %v", err))
-		os.Exit(1)
-	}
-
-	if err := os.MkdirAll("app", 0755); err != nil {
-		LogError(fmt.Sprintf("Failed to create app directory: %v", err))
-		os.Exit(1)
-	}
-
-	if err := os.WriteFile("app/.env", []byte(appEnv), 0644); err != nil {
-		LogError(fmt.Sprintf("Failed to write app/.env: %v", err))
-		os.Exit(1)
-	}
-
-	LogSuccess("Project name and database credentials have been synced across files.")
-}
-
-// Check if given TCP port is free on the host machine
-func IsPortAvailable(port string) bool {
-	ln, err := net.Listen("tcp", ":"+port)
+// Rewrite a .env file, replacing the values for the given keys.
+func updateEnvFile(path string, updates map[string]string) error {
+	f, err := os.Open(path)
 	if err != nil {
-		return false
+		return err
 	}
-	ln.Close()
-	return true
-}
 
-// Check if a Laravel project already exists in app/ directory
-func IsLaravelInstalled() bool {
-	indicators := []string{"app/artisan", "app/composer.json"}
-	for _, path := range indicators {
-		if _, err := os.Stat(path); err == nil {
-			return true
+	var lines []string
+	applied := make(map[string]bool)
+
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line := scanner.Text()
+		trimmed := strings.TrimSpace(line)
+
+		// Check if this is a commented-out key, e.g. "# DB_HOST=127.0.0.1"
+		if strings.HasPrefix(trimmed, "#") {
+			stripped := strings.TrimSpace(strings.TrimPrefix(trimmed, "#"))
+			parts := strings.SplitN(stripped, "=", 2)
+			if len(parts) == 2 {
+				key := strings.TrimSpace(parts[0])
+				if newVal, ok := updates[key]; ok {
+					lines = append(lines, key+"="+newVal)
+					applied[key] = true
+					continue
+				}
+			}
+			lines = append(lines, line)
+			continue
+		}
+
+		// Empty line - keep as-is
+		if trimmed == "" {
+			lines = append(lines, line)
+			continue
+		}
+
+		// Active key
+		parts := strings.SplitN(trimmed, "=", 2)
+		if len(parts) == 2 {
+			key := strings.TrimSpace(parts[0])
+			if newVal, ok := updates[key]; ok {
+				lines = append(lines, key+"="+newVal)
+				applied[key] = true
+				continue
+			}
+		}
+
+		lines = append(lines, line)
+	}
+	f.Close()
+
+	if err := scanner.Err(); err != nil {
+		return err
+	}
+
+	// Append keys that were not found anywhere in the file
+	for key, val := range updates {
+		if !applied[key] {
+			lines = append(lines, key+"="+val)
 		}
 	}
-	return false
+
+	content := strings.Join(lines, "\n") + "\n"
+	return os.WriteFile(path, []byte(content), 0644)
 }
 
-// Prompt the user with a label and default value, returning the input
-func askQuestion(reader *bufio.Reader, label string, defaultValue string) string {
-	fmt.Printf("%s%s%s [default: %s]: ", UIConfig.Yellow, label, UIConfig.Reset, defaultValue)
-
-	input, _ := reader.ReadString('\n')
-	input = strings.TrimSpace(input)
-
-	if input == "" {
-		return defaultValue
+// Read a key=value env file and return a map of the entries ignoring commented and empty lines.
+func parseEnvFile(path string) (map[string]string, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
 	}
-	return input
-}
+	defer f.Close()
 
-// Ask the user for a port number and keep prompting until they provide one that is currently free on the host.
-func askPort(reader *bufio.Reader, label string, defaultPort string) string {
-	for {
-		port := askQuestion(reader, label, defaultPort)
-		if IsPortAvailable(port) {
-			return port
+	result := make(map[string]string)
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
 		}
-		LogWarning(fmt.Sprintf("Port %s is already in use. Please choose a different port.", port))
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		result[strings.TrimSpace(parts[0])] = strings.TrimSpace(parts[1])
 	}
+	return result, scanner.Err()
 }
