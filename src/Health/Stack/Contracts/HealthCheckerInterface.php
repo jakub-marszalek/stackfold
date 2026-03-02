@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * Copyright (c) 2026. Jakub Marszałek <marszalek.jakub@proton.me>
+ * Licensed under the MIT License. See LICENSE file in the project root.
+ */
+
 declare(strict_types=1);
 
 namespace Health\Stack\Contracts;

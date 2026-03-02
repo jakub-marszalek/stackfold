@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-#
-# Copyright (c) 2025. Jakub Marszałek / hesoyamcc
-# All Rights Reserved.
-#
+
+# Copyright (c) 2026. Jakub Marszałek <marszalek.jakub@proton.me>
+# Licensed under the MIT License. See LICENSE file in the project root.
 
 #
 # Default configuration
