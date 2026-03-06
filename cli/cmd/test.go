@@ -21,7 +21,6 @@ The test includes:
 - PHP Stack internal health checks
 - Vite Dev Server availability
 - Host port accessibility check`,
-
 	Run: func(cmd *cobra.Command, args []string) {
 		HandleSimpleScript(PathStackTest)
 	},

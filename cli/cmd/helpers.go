@@ -20,7 +20,7 @@ import (
 func GetBoolFlagOrExit(cmd *cobra.Command, flagName string) bool {
 	value, err := cmd.Flags().GetBool(flagName)
 	if err != nil {
-		fmt.Printf("Error when rading dlag '%s': %v\n", flagName, err)
+		fmt.Printf("Error when rading flag '%s': %v\n", flagName, err)
 		os.Exit(1)
 	}
 	return value
@@ -45,20 +45,26 @@ func FindProjectRoot(startPath string) (string, error) {
 	}
 }
 
+// Return project root or exit with error
+func MustFindProjectRoot() string {
+	wd, err := os.Getwd()
+	if err != nil {
+		LogError(fmt.Sprintf("Could not get working directory: %v", err))
+		os.Exit(1)
+	}
+
+	projectRoot, err := FindProjectRoot(wd)
+	if err != nil {
+		LogError(fmt.Sprintf("Could not find project root: %v", err))
+		os.Exit(1)
+	}
+
+	return projectRoot
+}
+
 // Resolve absolute path from script root path
-func ResolvePathFromRoot(scriptPathFromRoot string) (string, error) {
-	workingDir, err := os.Getwd()
-	if err != nil {
-		return "", fmt.Errorf("Error while getting working directory: %w", err)
-	}
-
-	projectRoot, err := FindProjectRoot(workingDir)
-	if err != nil {
-		return "", fmt.Errorf("Project root dir not found: %w", err)
-	}
-
-	scriptPath := filepath.Join(projectRoot, scriptPathFromRoot)
-	return scriptPath, nil
+func ResolvePathFromRoot(scriptPathFromRoot string) string {
+	return filepath.Join(MustFindProjectRoot(), scriptPathFromRoot)
 }
 
 // Run script using bash
@@ -76,27 +82,43 @@ func RunBashScript(scriptPath string, args ...string) error {
 
 // Handle script that has no flags
 func HandleSimpleScript(scriptPathFromRoot string, args ...string) {
-	fullPath, err := ResolvePathFromRoot(scriptPathFromRoot)
-	if err != nil {
-		LogError(fmt.Sprintf("Path error: %v\n", err))
-		os.Exit(1)
-	}
-
-	if err := RunBashScript(fullPath, args...); err != nil {
+	if err := RunBashScript(ResolvePathFromRoot(scriptPathFromRoot), args...); err != nil {
 		LogError("Script execution failed!")
 		os.Exit(1)
 	}
 }
 
 // Handle script that uses optional flag
-func HandleFlaggedScript(scriptPath string, cmd *cobra.Command, flagName string, bashArg string) {
+func HandleFlaggedScript(scriptPath string, cmd *cobra.Command, flagName string) {
 	var bashArgs []string
 
 	if GetBoolFlagOrExit(cmd, flagName) {
-		bashArgs = append(bashArgs, bashArg)
+		bashArgs = append(bashArgs, "--"+flagName)
 	}
 
 	HandleSimpleScript(scriptPath, bashArgs...)
+}
+
+// Resolve container name from .env.docker by key (e.g. "CONTAINER_POSTGRES")
+// Expands ${PROJECT_NAME} references automatically
+func ResolveContainerName(key string) (string, error) {
+	envPath := filepath.Join(MustFindProjectRoot(), ".env.docker")
+	env, err := parseEnvFile(envPath)
+	if err != nil {
+		return "", fmt.Errorf("could not read .env.docker: %w", err)
+	}
+
+	value, ok := env[key]
+	if !ok {
+		return "", fmt.Errorf("key %q not found in .env.docker", key)
+	}
+
+	// Expand ${PROJECT_NAME} if present
+	if projectName, exists := env["PROJECT_NAME"]; exists {
+		value = strings.ReplaceAll(value, "${PROJECT_NAME}", projectName)
+	}
+
+	return value, nil
 }
 
 // Rewrite a .env file, replacing the values for the given keys.

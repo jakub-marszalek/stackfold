@@ -18,9 +18,9 @@ class Postgres implements HealthCheckInterface
 {
     private const string HOST = 'db';
     private const int PORT = 5432;
-    private const string DEFAULT_DB = 'database';
+    private const string DEFAULT_DB = 'mydatabase';
     private const string DEFAULT_USER = 'admin';
-    private const string DEFAULT_PASS = 'Admin123';
+    private const string DEFAULT_PASS = 'admin123';
 
     private const string SOURCE_DIRECTORY = '/var/www/html';
 

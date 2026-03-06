@@ -1,7 +1,8 @@
 .idea/
 .vscode/
+/app/
+/backups/
 /node_modules/
 /vendor/
-/app/
 .env
 .env.docker

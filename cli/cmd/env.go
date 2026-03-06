@@ -8,6 +8,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -87,4 +88,30 @@ func WriteEnvFiles(cfg EnvConfig) {
 	WriteLaravelEnv(cfg)
 	LogSuccess("Project name and database credentials have been synced across files.")
 	fmt.Println()
+}
+
+// Read database credentials and container name from .env.docker.
+func ResolveDBConfig() (container, dbName, dbUser string) {
+	envPath := filepath.Join(MustFindProjectRoot(), ".env.docker")
+	env, err := parseEnvFile(envPath)
+	if err != nil {
+		LogError(fmt.Sprintf("Could not read .env.docker: %v", err))
+		os.Exit(1)
+	}
+
+	container, err = ResolveContainerName("CONTAINER_POSTGRES")
+	if err != nil {
+		LogError(fmt.Sprintf("Could not resolve container name: %v", err))
+		os.Exit(1)
+	}
+
+	dbName = env["POSTGRES_DATABASE"]
+	dbUser = env["POSTGRES_USER"]
+
+	if dbName == "" || dbUser == "" {
+		LogError("Missing POSTGRES_DATABASE or POSTGRES_USER in .env.docker")
+		os.Exit(1)
+	}
+
+	return container, dbName, dbUser
 }

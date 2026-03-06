@@ -25,16 +25,7 @@ func IsLaravelInstalled() bool {
 
 // Install a fresh Laravel project into the app/ directory using official Composer Docker image.
 func InstallLaravel(cfg EnvConfig) error {
-	workingDir, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("Could not determine working directory: %w", err)
-	}
-
-	projectRoot, err := FindProjectRoot(workingDir)
-	if err != nil {
-		return fmt.Errorf("Could not locate project root: %w", err)
-	}
-
+	projectRoot := MustFindProjectRoot()
 	appDir := filepath.Join(projectRoot, "app")
 
 	// Ensure app/ dir exists so Docker can bind-mount it
