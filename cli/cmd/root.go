@@ -12,6 +12,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var version = "dev"
+
 var rootCmd = &cobra.Command{
 	Use:   "stackfold",
 	Short: "Stackfold - Laravel Docker Automation",
@@ -34,4 +36,6 @@ func Execute() {
 	}
 }
 
-func init() {}
+func init() {
+	rootCmd.Version = version
+}
