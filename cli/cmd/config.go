@@ -62,19 +62,17 @@ func runConfig() {
 	LogWarning("Stopping active containers to avoid naming and port conflicts...")
 	fmt.Println()
 	HandleSimpleScript(PathStackDown)
-	fmt.Println()
 
 	PrintHeader("Updating stack configuration...")
-	cfg := RunConfigWizard()
-	WriteEnvFiles(cfg)
+	WriteEnvFiles(RunConfigWizard())
 
-    // Remind about volume implications
-    DrawLine(UIConfig.Yellow)
-    LogWarning("REMINDER: Changing database name or password won't update existing volumes.")
-    fmt.Println("If you changed those values, run 'stackfold reset --force' afterward.")
-    fmt.Println("Read 'stackfold reset --help' before doing so — all data will be lost.")
-    DrawLine(UIConfig.Yellow)
-    fmt.Println()
+	// Remind about volume implications
+	DrawLine(UIConfig.Yellow)
+	LogWarning("REMINDER: Changing database name or password won't update existing volumes.")
+	fmt.Println("If you changed those values, run 'stackfold reset --force' afterward.")
+	fmt.Println("Read 'stackfold reset --help' before doing so — all data will be lost.")
+	DrawLine(UIConfig.Yellow)
+	fmt.Println()
 
 	PrintHeader("Configuration updated")
 }

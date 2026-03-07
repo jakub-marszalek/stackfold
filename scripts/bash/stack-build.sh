@@ -16,7 +16,7 @@ BUILD_AND_START=false
 
 for arg in "$@"; do
   case $arg in
-    --build-and-start|--bs|--B)
+    --start|--s)
       BUILD_AND_START=true
       shift
       ;;
