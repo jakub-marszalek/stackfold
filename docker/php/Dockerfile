@@ -1,9 +1,7 @@
-#
-# Copyright (c) 2025. Jakub Marszałek / hesoyamcc
-# All Rights Reserved.
-#
+# Copyright (c) 2026. Jakub Marszałek <marszalek.jakub@proton.me>
+# Licensed under the MIT License. See LICENSE file in the project root.
 
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # Install packages
 RUN apk add --no-cache \
@@ -19,6 +17,21 @@ RUN apk add --no-cache \
     && pecl install redis \
     && docker-php-ext-enable redis
 
+# Copy composer
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 WORKDIR /var/www/html
 
+COPY app/composer.json app/composer.lock ./
+
+# Run composer install
+RUN composer install --no-interaction --no-scripts --no-autoloader --prefer-dist
+COPY app/ .
+RUN composer dump-autoload --optimize
+
+# Copy entrypoint
+COPY docker/php/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Run entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]

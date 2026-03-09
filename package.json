@@ -1,7 +1,11 @@
 {
-  "name": "boilerplate",
+  "name": "hesoyamcc/stackfold",
   "version": "1.0.0",
+  "description": "Frontend assets for Stackfold automation tool",
+  "private": "true",
   "type": "module",
+  "license": "MIT",
+  "author": "Jakub Marszałek",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
