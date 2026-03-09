@@ -14,21 +14,17 @@ import (
 
 // Write .env.docker from the given config
 func WriteDockerEnv(cfg EnvConfig) {
-	dockerEnv := fmt.Sprintf(`# Docker Stack Configuration
-PROJECT_NAME=%s
+	dockerEnv := fmt.Sprintf(`PROJECT_NAME=%s
 
-# Containers
 CONTAINER_NGINX=${PROJECT_NAME}-nginx
 CONTAINER_PHP=${PROJECT_NAME}-php
 CONTAINER_POSTGRES=${PROJECT_NAME}-postgres
 CONTAINER_REDIS=${PROJECT_NAME}-redis
 CONTAINER_NODE=${PROJECT_NAME}-node
 
-# Ports
 HTTP_PORT=%s
 DB_PORT=%s
 
-# Postgres Credentials
 POSTGRES_DATABASE=%s
 POSTGRES_USER=%s
 POSTGRES_PASSWORD=%s
